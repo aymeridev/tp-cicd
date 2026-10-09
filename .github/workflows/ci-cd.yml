@@ -38,10 +38,25 @@ jobs:
       - name: Construire l'image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/tp-cicd:latest .
+      - name: Exporter l'image
+        run: |
+          docker save ${{ secrets.DOCKER_USERNAME }}/tp-cicd:latest -o image.tar
+      - name: Sauvegarder l'image
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-docker
+          path: image.tar
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Récupérer l'image
+        uses: actions/download-artifact@v4
+        with:
+          name: image-docker
+      - name: Charger l'image
+        run: |
+          docker load -i image.tar
       - name: Connexion à Docker Hub
         uses: docker/login-action@v3
         with:
