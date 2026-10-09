@@ -35,6 +35,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Construir l'image
+      - name: Construire l'image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/tp-cicd:latest
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/tp-cicd:latest .
+      - name: Publier l'image
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/tp-cicd:latest
