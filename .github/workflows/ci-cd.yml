@@ -24,7 +24,7 @@ jobs:
         run: |
           pytest
 
-  docker:
+  build:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -38,6 +38,10 @@ jobs:
       - name: Construire l'image
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/tp-cicd:latest .
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Publier l'image
         run: |
           docker push ${{ secrets.DOCKER_USERNAME }}/tp-cicd:latest
